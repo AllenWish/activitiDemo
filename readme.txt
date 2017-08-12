@@ -66,4 +66,3 @@ Activiti 查询流程实例状态:act_ru_execution
 查询历史流程实例:其实本质就是查询历史流程实例表；act_hi_procinst
 这里有一点说下 这个表的id和流程实例id始终是一样的。所以Activiti没有提供获取流程实例id的接口；
 因为直接getId()获取的值和流程实例Id是一样的；
-
