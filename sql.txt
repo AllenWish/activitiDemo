@@ -13,8 +13,6 @@ SELECT * FROM `act_ge_bytearray`
 # 系统配置表 
 SELECT * FROM `act_ge_property`
 
-
-
 ################################
 # 启动流程实例涉及到的表
 
