@@ -1,28 +1,3 @@
-ACT_RE_*: 'RE'表示repository。 这个前缀的表包含了流程定义和流程静态资源 （图片，规则，等等）。
-
-ACT_RU_*: 'RU'表示runtime。 这些运行时的表，包含流程实例，任务，变量，异步任务，等运行中的数据。 Activiti只在流程实例执行过程中保存这些数据， 
-	在流程结束时就会删除这些记录。 这样运行时表可以一直很小速度很快。
-
-ACT_ID_*: 'ID'表示identity。 这些表包含身份信息，比如用户，组等等。
-
-ACT_HI_*: 'HI'表示history。 这些表包含历史数据，比如历史流程实例， 变量，任务等等。
-
-ACT_GE_*: 'GE'表示general。通用数据， 用于不同场景下，如存放资源文件。
-
-
-act_re_deployment 流程定义部署表：
-act_re_procdef 流程定义表
-		可以通过API 把act_re_procdef表所有列的数据全部查询出来
-act_ge_bytearry 资源文件表
-		在开发流程管理系统的时候，一般在流程定义模块，我们都要求能够查看某个流程定义的流程图片，
-		对应的数据表act_ge_bytearray的BYTES_字段；
-act_ge_property 属性表
-		这里的next_dbid是主键策略，就是规定好了下一次生成的id就是10001；
-act_hi_actinst 历史流程活动执行表
-	当流程实例完成后，我们要查下流程活动具体的执行情况，比如这个流程实例什么时候开始的，什么时候结束的，
-	以及中间具体的执行步骤，这时候，我们需要查询历史流程活动执行表，act_hi_actinst	
-		
-
 Activiti给我们提供了接口，可以返回一个资源文件输入流，然后我们可以得到一张图片，存到本地服务器，然后我们可以通过图片路径在网页上显示，
 来实现管理员查询流程定义图片的功能；
 我们代码里用到了apache的commons包里的FileUtils类
@@ -66,3 +41,19 @@ Activiti 查询流程实例状态:act_ru_execution
 查询历史流程实例:其实本质就是查询历史流程实例表；act_hi_procinst
 这里有一点说下 这个表的id和流程实例id始终是一样的。所以Activiti没有提供获取流程实例id的接口；
 因为直接getId()获取的值和流程实例Id是一样的；
+
+
+ 关键对象
+1.      Deployment：流程部署对象，部署一个流程时创建。
+2.      ProcessDefinitions：流程定义，部署成功后自动创建。
+3.      ProcessInstances：流程实例，启动流程时创建。 
+4.      Task：任务，在Activiti中的Task仅指有角色参与的任务，即定义中的UserTask。 
+5.      Execution：执行计划，流程实例和流程执行中的所有节点都是Execution，如UserTask、ServiceTask等。
+服务接口
+1.      ProcessEngine：流程引擎的抽象，通过它我们可以获得我们需要的一切服务。 
+2.      RepositoryService：Activiti中每一个不同版本的业务流程的定义都需要使用一些定义文件，部署文件和支持数据(例如BPMN2.0 XML文件，表单定义文件，流程定义图像文件等)，这些文件都存储在Activiti内建的Repository中。RepositoryService提供了对 repository的存取服务。
+3.      RuntimeService：在Activiti中，每当一个流程定义被启动一次之后，都会生成一个相应的流程对象实例。RuntimeService提供了启动流程、查询流程实例、设置获取流程实例变量等功能。此外它还提供了对流程部署，流程定义和流程实例的存取服务。
+4.      TaskService: 在Activiti中业务流程定义中的每一个执行节点被称为一个Task，对流程中的数据存取，状态变更等操作均需要在Task中完成。TaskService提供了对用户Task 和Form相关的操作。它提供了运行时任务查询、领取、完成、删除以及变量设置等功能。 
+5.      IdentityService: Activiti中内置了用户以及组管理的功能，必须使用这些用户和组的信息才能获取到相应的Task。IdentityService提供了对Activiti 系统中的用户和组的管理功能。
+6.      ManagementService: ManagementService提供了对Activiti流程引擎的管理和维护功能，这些功能不在工作流驱动的应用程序中使用，主要用于Activiti系统的日常维护。 
+7.      HistoryService: HistoryService用于获取正在运行或已经完成的流程实例的信息，与RuntimeService中获取的流程信息不同，历史信息包含已经持久化存储的永久信息，并已经被针对查询优化。
